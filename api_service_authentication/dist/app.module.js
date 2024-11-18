@@ -26,12 +26,8 @@ exports.AppModule = AppModule = __decorate([
             jwt_1.JwtModule,
             microservices_1.ClientsModule.register([
                 {
-                    name: 'Authentication',
+                    name: 'AUTHENTICATION',
                     transport: microservices_1.Transport.TCP,
-                    options: {
-                        host: 'localhost',
-                        port: 3000,
-                    },
                 },
             ]),
         ],

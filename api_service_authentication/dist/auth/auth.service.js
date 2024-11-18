@@ -77,8 +77,7 @@ let AuthService = class AuthService {
                 age: dto.age,
             },
         });
-        const tokens = await this.getTokens(newUser.id, newUser.email);
-        return tokens;
+        return this.getTokens(newUser.id, newUser.email);
     }
 };
 exports.AuthService = AuthService;

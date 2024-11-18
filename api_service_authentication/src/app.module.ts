@@ -14,10 +14,11 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     JwtModule,
     ClientsModule.register([
       {
-        name: 'Authentication',
+        name: 'AUTHENTICATION',
         transport: Transport.TCP,
       },
-    ]),],
+    ]),
+  ],
   controllers: [AuthController],
   providers: [AuthService, PrismaService, JwtService],
 })

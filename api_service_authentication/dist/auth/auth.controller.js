@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
 const login_dto_1 = require("../dto/login.dto");
 const register_dto_1 = require("../dto/register.dto");
+const microservices_1 = require("@nestjs/microservices");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
@@ -25,11 +26,12 @@ let AuthController = class AuthController {
         return this.authService.signIn(dto);
     }
     signup(dto) {
-        return this.authService.signIn(dto);
+        return this.authService.signup(dto);
     }
 };
 exports.AuthController = AuthController;
 __decorate([
+    (0, microservices_1.MessagePattern)('AUTHENTICATED_USER'),
     (0, common_1.Post)('/signin'),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     __param(0, (0, common_1.Body)()),
@@ -38,6 +40,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "signIn", null);
 __decorate([
+    (0, microservices_1.MessagePattern)('USER_CREATED'),
     (0, common_1.Post)('/signup'),
     (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
     __param(0, (0, common_1.Body)()),

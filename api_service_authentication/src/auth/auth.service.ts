@@ -91,7 +91,6 @@ export class AuthService {
       },
     });
 
-    const tokens = await this.getTokens(newUser.id, newUser.email);
-    return tokens;
+    return this.getTokens(newUser.id, newUser.email);
   }
 }
