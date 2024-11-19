@@ -17,6 +17,6 @@ export declare class AuthService {
         access_token: string;
     }>;
     signup(dto: RegisterDto): Promise<{
-        access_token: string[];
+        access_token: string;
     }>;
 }

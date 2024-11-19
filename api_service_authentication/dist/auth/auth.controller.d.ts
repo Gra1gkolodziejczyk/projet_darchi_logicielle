@@ -5,9 +5,9 @@ export declare class AuthController {
     private authService;
     constructor(authService: AuthService);
     signIn(dto: LoginDto): Promise<{
-        access_token: Awaited<string>[];
+        access_token: string;
     }>;
     signup(dto: RegisterDto): Promise<{
-        access_token: Awaited<string>[];
+        access_token: string;
     }>;
 }

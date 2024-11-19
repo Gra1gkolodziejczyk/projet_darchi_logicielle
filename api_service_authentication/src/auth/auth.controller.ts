@@ -20,7 +20,7 @@ export class AuthController {
   @HttpCode(HttpStatus.CREATED)
   signup(
     @Body() dto: RegisterDto,
-  ): Promise<{ access_token: Awaited<string>[] }> {
+  ): Promise<{ access_token: string }> {
     return this.authService.signup(dto);
   }
 }

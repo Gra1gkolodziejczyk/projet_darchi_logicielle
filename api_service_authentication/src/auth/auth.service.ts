@@ -88,7 +88,7 @@ export class AuthService {
     return tokens;
   }
 
-  async signup(dto: RegisterDto): Promise<{ access_token: string[] }> {
+  async signup(dto: RegisterDto): Promise<{ access_token: string }> {
     const hash = await this.hashData(dto.password);
 
     const newUser = await this.prisma.user.create({
