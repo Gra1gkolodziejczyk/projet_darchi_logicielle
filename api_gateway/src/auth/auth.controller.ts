@@ -29,4 +29,14 @@ export class AuthController {
   async signUp(@Body() payload: RegisterDto) {
     return this.client.send('USER_CREATED', payload);
   }
+
+  @Post('signout')
+  async signOut(@Body() userId: number) {
+    return this.client.send('SIGNED_OUT', userId);
+  }
+
+  @Post('refreshToken')
+  async refreshToken(@Body() refreshToken: string) {
+    return this.client.send('REFRESHED_TOKEN', refreshToken);
+  }
 }

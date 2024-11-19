@@ -13,6 +13,14 @@ async function bootstrap() {
     },
   });
 
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.TCP,
+    options: {
+      host: 'http://localhost',
+      port: 9003,
+    },
+  });
+
   await app.listen(9001);
 }
 

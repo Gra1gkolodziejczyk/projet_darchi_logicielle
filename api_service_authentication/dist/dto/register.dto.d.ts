@@ -1,6 +1,6 @@
-export declare class RegisterDto {
+export default class RegisterDto {
     email: string;
-    password: string;
+    hash: string;
     firstname: string;
     lastname: string;
     age: number;

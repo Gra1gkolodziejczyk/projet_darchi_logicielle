@@ -1,4 +1,4 @@
-export declare class LoginDto {
+export default class LoginDto {
     email: string;
-    password: string;
+    hash: string;
 }

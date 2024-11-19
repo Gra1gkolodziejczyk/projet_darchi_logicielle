@@ -1,22 +1,17 @@
-import { LoginDto } from '../dto/login.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { User as PrismaUser } from '@prisma/client';
+import RegisterDto from '../dto/register.dto';
+import { Tokens } from './types/token.type';
 import { JwtService } from '@nestjs/jwt';
-import { RegisterDto } from '../dto/register.dto';
+import LoginDto from '../dto/login.dto';
 export declare class AuthService {
     private prisma;
     private jwtService;
-    private client;
     constructor(prisma: PrismaService, jwtService: JwtService);
-    validateUser(email: string, password: string): Promise<PrismaUser | null>;
-    getTokens(userId: number, email: string): Promise<{
-        access_token: string;
-    }>;
+    signIn(dto: LoginDto): Promise<Tokens>;
+    signUp(dto: RegisterDto): Promise<Tokens>;
+    refreshToken(userId: number, refreshToken: string): Promise<Tokens>;
+    signOut(userId: number): Promise<void>;
+    updateRefreshToken(userId: number, refreshToken: string): Promise<void>;
     hashData(data: string): Promise<string>;
-    signIn(dto: LoginDto): Promise<{
-        access_token: string;
-    }>;
-    signup(dto: RegisterDto): Promise<{
-        access_token: string;
-    }>;
+    getTokens(userId: number, email: string): Promise<Tokens>;
 }

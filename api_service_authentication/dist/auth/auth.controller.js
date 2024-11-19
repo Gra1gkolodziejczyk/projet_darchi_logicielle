@@ -15,8 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
-const login_dto_1 = require("../dto/login.dto");
 const register_dto_1 = require("../dto/register.dto");
+const login_dto_1 = require("../dto/login.dto");
+const guards_1 = require("./guards");
+const decorators_1 = require("./decorators");
 const microservices_1 = require("@nestjs/microservices");
 let AuthController = class AuthController {
     constructor(authService) {
@@ -25,29 +27,52 @@ let AuthController = class AuthController {
     signIn(dto) {
         return this.authService.signIn(dto);
     }
-    signup(dto) {
-        return this.authService.signup(dto);
+    signUp(dto) {
+        return this.authService.signUp(dto);
+    }
+    signOut(userId) {
+        return this.authService.signOut(userId);
+    }
+    refreshToken(userId, refreshToken) {
+        return this.authService.refreshToken(userId, refreshToken);
     }
 };
 exports.AuthController = AuthController;
 __decorate([
-    (0, microservices_1.MessagePattern)('AUTHENTICATED_USER'),
     (0, common_1.Post)('/signin'),
-    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, microservices_1.MessagePattern)('AUTHENTICATED_USER'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [login_dto_1.LoginDto]),
+    __metadata("design:paramtypes", [login_dto_1.default]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "signIn", null);
 __decorate([
-    (0, microservices_1.MessagePattern)('USER_CREATED'),
     (0, common_1.Post)('/signup'),
-    (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
+    (0, microservices_1.MessagePattern)('USER_CREATED'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [register_dto_1.RegisterDto]),
+    __metadata("design:paramtypes", [register_dto_1.default]),
     __metadata("design:returntype", Promise)
-], AuthController.prototype, "signup", null);
+], AuthController.prototype, "signUp", null);
+__decorate([
+    (0, common_1.UseGuards)(guards_1.AccessTokenAuthGuard),
+    (0, common_1.Post)('/signout'),
+    (0, microservices_1.MessagePattern)('SIGNED_OUT'),
+    __param(0, (0, decorators_1.GetCurrentUserId)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "signOut", null);
+__decorate([
+    (0, common_1.UseGuards)(guards_1.RefreshTokenAuthGuard),
+    (0, common_1.Post)('/refresh'),
+    (0, microservices_1.MessagePattern)('REFRESHED_TOKEN'),
+    __param(0, (0, decorators_1.GetCurrentUserId)()),
+    __param(1, (0, decorators_1.GetCurrentUser)('refreshToken')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, String]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "refreshToken", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])

@@ -11,49 +11,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
-const bcrypt = require("bcrypt");
 const prisma_service_1 = require("../prisma/prisma.service");
+const bcrypt = require("bcrypt");
 const jwt_1 = require("@nestjs/jwt");
 const constant_1 = require("./constant");
-const microservices_1 = require("@nestjs/microservices");
 let AuthService = class AuthService {
     constructor(prisma, jwtService) {
         this.prisma = prisma;
         this.jwtService = jwtService;
-        this.client = microservices_1.ClientProxyFactory.create({
-            transport: microservices_1.Transport.TCP,
-            options: {
-                host: 'localhost',
-                port: 9002,
-            },
-        });
-    }
-    async validateUser(email, password) {
-        const user = await this.prisma.user.findUnique({
-            where: {
-                email: email,
-            },
-        });
-        if (!user)
-            return null;
-        const passwordMatches = await bcrypt.compare(password, user.hash);
-        if (!passwordMatches)
-            return null;
-        return user;
-    }
-    async getTokens(userId, email) {
-        const accessToken = await this.jwtService.signAsync({ sub: userId, email }, {
-            secret: constant_1.jwtConstants.secret,
-            expiresIn: '15m',
-        });
-        return { access_token: accessToken };
-    }
-    async hashData(data) {
-        if (!data) {
-            throw new Error('Data to hash cannot be empty.');
-        }
-        const salt = await bcrypt.genSalt(10);
-        return bcrypt.hash(data, salt);
     }
     async signIn(dto) {
         const user = await this.prisma.user.findUnique({
@@ -61,18 +26,17 @@ let AuthService = class AuthService {
                 email: dto.email,
             },
         });
-        if (!user) {
-            throw new Error('User not found.');
-        }
+        if (!user)
+            throw new common_1.ForbiddenException('Access denied');
         const passwordMatches = await bcrypt.compare(dto.password, user.hash);
-        if (!passwordMatches) {
-            throw new Error('Invalid credentials.');
-        }
+        if (!passwordMatches)
+            throw new common_1.ForbiddenException('Access denied');
         const tokens = await this.getTokens(user.id, user.email);
+        await this.updateRefreshToken(user.id, tokens.refresh_token);
         return tokens;
     }
-    async signup(dto) {
-        const hash = await this.hashData(dto.password);
+    async signUp(dto) {
+        const hash = await this.hashData(dto.hash);
         const newUser = await this.prisma.user.create({
             data: {
                 email: dto.email,
@@ -82,7 +46,68 @@ let AuthService = class AuthService {
                 age: dto.age,
             },
         });
-        return this.getTokens(newUser.id, newUser.email);
+        const tokens = await this.getTokens(newUser.id, newUser.email);
+        await this.updateRefreshToken(newUser.id, tokens.refresh_token);
+        return tokens;
+    }
+    async refreshToken(userId, refreshToken) {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                id: userId,
+            },
+        });
+        if (!user)
+            throw new common_1.ForbiddenException('Access denied');
+        const refreshTokenMatch = await bcrypt.compare(refreshToken, user.hashRt);
+        if (!refreshTokenMatch)
+            throw new common_1.ForbiddenException('Access denied');
+        const tokens = await this.getTokens(user.id, user.email);
+        await this.updateRefreshToken(user.id, tokens.refresh_token);
+        return tokens;
+    }
+    async signOut(userId) {
+        await this.prisma.user.updateMany({
+            where: {
+                id: userId,
+                hashRt: {
+                    not: null,
+                },
+            },
+            data: {
+                hashRt: null,
+            },
+        });
+    }
+    async updateRefreshToken(userId, refreshToken) {
+        const hash = await this.hashData(refreshToken);
+        await this.prisma.user.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                hashRt: hash,
+            },
+        });
+    }
+    async hashData(data) {
+        if (!data) {
+            throw new Error('Data to hash cannot be empty.');
+        }
+        const salt = await bcrypt.genSalt(10);
+        return bcrypt.hash(data, salt);
+    }
+    async getTokens(userId, email) {
+        const [accessToken, refreshToken] = await Promise.all([
+            this.jwtService.signAsync({ sub: userId, email }, {
+                secret: constant_1.jwtConstants.secret,
+                expiresIn: 60 * 15,
+            }),
+            this.jwtService.signAsync({ sub: userId, email }, {
+                secret: constant_1.jwtConstants.secret,
+                expiresIn: 60 * 60 * 24 * 7,
+            }),
+        ]);
+        return { access_token: accessToken, refresh_token: refreshToken };
     }
 };
 exports.AuthService = AuthService;
