@@ -21,7 +21,7 @@ export class AuthService {
       transport: Transport.TCP,
       options: {
         host: 'localhost',
-        port: 3000,
+        port: 9002,
       },
     });
   }
@@ -45,41 +45,51 @@ export class AuthService {
     return user;
   }
 
-  async getTokens(userId: number, email: string) {
-    const accessToken = await Promise.all([
-      this.jwtService.signAsync(
-        { sub: userId, email },
-        {
-          secret: jwtConstants.secret,
-          expiresIn: 60 * 15,
-        },
-      ),
-    ]);
+  async getTokens(
+    userId: number,
+    email: string,
+  ): Promise<{ access_token: string }> {
+    const accessToken = await this.jwtService.signAsync(
+      { sub: userId, email },
+      {
+        secret: jwtConstants.secret,
+        expiresIn: '15m', // 15 minutes
+      },
+    );
     return { access_token: accessToken };
   }
 
-  hashData(data: string) {
-    return bcrypt.hashSync(data, 10);
+  async hashData(data: string): Promise<string> {
+    if (!data) {
+      throw new Error('Data to hash cannot be empty.');
+    }
+    const salt = await bcrypt.genSalt(10); // Génère un sel asynchrone
+    return bcrypt.hash(data, salt); // Hachage asynchrone
   }
 
-  async signIn(dto: LoginDto): Promise<{ access_token: Awaited<string>[] }> {
+  async signIn(dto: LoginDto): Promise<{ access_token: string }> {
     const user = await this.prisma.user.findUnique({
       where: {
         email: dto.email,
       },
     });
 
-    if (!user) throw new Error('Access denied');
+    if (!user) {
+      throw new Error('User not found.');
+    }
 
     const passwordMatches = await bcrypt.compare(dto.password, user.hash);
 
-    if (!passwordMatches) throw new Error('Access denied');
+    if (!passwordMatches) {
+      throw new Error('Invalid credentials.');
+    }
 
-    return this.getTokens(user.id, user.email);
+    const tokens = await this.getTokens(user.id, user.email);
+    return tokens;
   }
 
-  async signup(dto: RegisterDto): Promise<{ access_token: Awaited<string>[] }> {
-    const hash = this.hashData(dto.password);
+  async signup(dto: RegisterDto): Promise<{ access_token: string[] }> {
+    const hash = await this.hashData(dto.password);
 
     const newUser = await this.prisma.user.create({
       data: {

@@ -24,7 +24,7 @@ let AuthService = class AuthService {
             transport: microservices_1.Transport.TCP,
             options: {
                 host: 'localhost',
-                port: 3000,
+                port: 9002,
             },
         });
     }
@@ -42,16 +42,18 @@ let AuthService = class AuthService {
         return user;
     }
     async getTokens(userId, email) {
-        const accessToken = await Promise.all([
-            this.jwtService.signAsync({ sub: userId, email }, {
-                secret: constant_1.jwtConstants.secret,
-                expiresIn: 60 * 15,
-            }),
-        ]);
+        const accessToken = await this.jwtService.signAsync({ sub: userId, email }, {
+            secret: constant_1.jwtConstants.secret,
+            expiresIn: '15m',
+        });
         return { access_token: accessToken };
     }
-    hashData(data) {
-        return bcrypt.hashSync(data, 10);
+    async hashData(data) {
+        if (!data) {
+            throw new Error('Data to hash cannot be empty.');
+        }
+        const salt = await bcrypt.genSalt(10);
+        return bcrypt.hash(data, salt);
     }
     async signIn(dto) {
         const user = await this.prisma.user.findUnique({
@@ -59,15 +61,18 @@ let AuthService = class AuthService {
                 email: dto.email,
             },
         });
-        if (!user)
-            throw new Error('Access denied');
+        if (!user) {
+            throw new Error('User not found.');
+        }
         const passwordMatches = await bcrypt.compare(dto.password, user.hash);
-        if (!passwordMatches)
-            throw new Error('Access denied');
-        return this.getTokens(user.id, user.email);
+        if (!passwordMatches) {
+            throw new Error('Invalid credentials.');
+        }
+        const tokens = await this.getTokens(user.id, user.email);
+        return tokens;
     }
     async signup(dto) {
-        const hash = this.hashData(dto.password);
+        const hash = await this.hashData(dto.password);
         const newUser = await this.prisma.user.create({
             data: {
                 email: dto.email,

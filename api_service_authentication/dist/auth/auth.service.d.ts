@@ -10,13 +10,13 @@ export declare class AuthService {
     constructor(prisma: PrismaService, jwtService: JwtService);
     validateUser(email: string, password: string): Promise<PrismaUser | null>;
     getTokens(userId: number, email: string): Promise<{
-        access_token: [string];
+        access_token: string;
     }>;
-    hashData(data: string): string;
+    hashData(data: string): Promise<string>;
     signIn(dto: LoginDto): Promise<{
-        access_token: Awaited<string>[];
+        access_token: string;
     }>;
     signup(dto: RegisterDto): Promise<{
-        access_token: Awaited<string>[];
+        access_token: string[];
     }>;
 }

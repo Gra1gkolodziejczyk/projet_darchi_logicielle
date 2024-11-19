@@ -9,11 +9,11 @@ async function bootstrap() {
     transport: Transport.TCP,
     options: {
       host: 'http://localhost',
-      port: 3000,
+      port: 9002,
     },
   });
 
-  await app.listen(3200);
+  await app.listen(9001);
 }
 
 bootstrap();

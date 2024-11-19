@@ -11,7 +11,7 @@ export class AuthController {
   @MessagePattern('AUTHENTICATED_USER')
   @Post('/signin')
   @HttpCode(HttpStatus.OK)
-  signIn(@Body() dto: LoginDto): Promise<{ access_token: Awaited<string>[] }> {
+  signIn(@Body() dto: LoginDto): Promise<{ access_token: string }> {
     return this.authService.signIn(dto);
   }
 
