@@ -25,7 +25,6 @@ export class CarController {
   @UseGuards(AuthGuard)
   @Post('/create')
   createCar(@Body() payload: CarDto, @Req() req) {
-    const user = req.user.sub;
-    return this.client.send('CREATE_CAR', { ...payload, userId: user });
+    return this.client.send('CREATE_CAR', {...payload, userId: req.user.id});
   }
 }

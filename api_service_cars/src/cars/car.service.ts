@@ -5,10 +5,10 @@ import { CarDto } from '../dto/car.dto';
 @Injectable()
 export class CarService {
   constructor(private prisma: PrismaService) {}
-  async createCar(carDto: CarDto, userId: number) {
+  async createCar(carDto: CarDto) {
     const car = await this.prisma.car.create({
       data: {
-        userId: userId,
+        userId: carDto.userId,
         model: carDto.model,
         brand: carDto.brand,
         color: carDto.color,

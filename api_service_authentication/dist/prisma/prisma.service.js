@@ -12,13 +12,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PrismaService = void 0;
 const common_1 = require("@nestjs/common");
 const client_1 = require("@prisma/client");
-const process = require("process");
 let PrismaService = class PrismaService extends client_1.PrismaClient {
     constructor() {
         super({
             datasources: {
                 db: {
-                    url: process.env.DATABASE_URL,
+                    url: "postgresql://neondb_owner:rkI4EXhms3zO@ep-muddy-mouse-a5d4ktou.us-east-2.aws.neon.tech/neondb?sslmode=require",
                 },
             },
         });

@@ -36,8 +36,8 @@ let AuthController = class AuthController {
     signOut(userId) {
         return this.authService.signOut(userId);
     }
-    getUserId(userId) {
-        return this.authService.findUserById(userId);
+    async verifyToken(data) {
+        return data.user;
     }
     refreshToken(userId, refreshToken) {
         return this.authService.refreshToken(userId, refreshToken);
@@ -83,13 +83,12 @@ __decorate([
 ], AuthController.prototype, "signOut", null);
 __decorate([
     (0, common_1.UseGuards)(guards_1.AccessTokenAuthGuard),
-    (0, common_1.Get)('/userId'),
-    (0, microservices_1.MessagePattern)('USER_ID'),
-    __param(0, (0, decorators_1.GetCurrentUserId)()),
+    (0, microservices_1.MessagePattern)('VERIFY_TOKEN'),
+    __param(0, (0, microservices_1.Payload)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "getUserId", null);
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "verifyToken", null);
 __decorate([
     (0, common_1.UseGuards)(guards_1.RefreshTokenAuthGuard),
     (0, common_1.Post)('/refresh'),

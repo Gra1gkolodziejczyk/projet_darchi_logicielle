@@ -14,20 +14,22 @@ const passport_jwt_1 = require("passport-jwt");
 const passport_1 = require("@nestjs/passport");
 const common_1 = require("@nestjs/common");
 const constant_1 = require("../constant");
+const auth_service_1 = require("../auth.service");
 let AccessTokenStrategy = class AccessTokenStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy, 'jwt') {
-    constructor() {
+    constructor(authService) {
         super({
             jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
             secretOrKey: constant_1.jwtConstants.secret,
         });
+        this.authService = authService;
     }
     async validate(payload) {
-        return { userId: payload.sub, email: payload.email };
+        return this.authService.findUserById(payload.sub);
     }
 };
 exports.AccessTokenStrategy = AccessTokenStrategy;
 exports.AccessTokenStrategy = AccessTokenStrategy = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], AccessTokenStrategy);
 //# sourceMappingURL=accessToken.strategy.js.map

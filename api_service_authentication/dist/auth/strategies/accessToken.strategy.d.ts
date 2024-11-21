@@ -1,14 +1,23 @@
 import { Strategy } from 'passport-jwt';
+import { AuthService } from '../auth.service';
 type JwtPayload = {
-    sub: string;
+    sub: number;
     email: string;
 };
 declare const AccessTokenStrategy_base: new (...args: any[]) => Strategy;
 export declare class AccessTokenStrategy extends AccessTokenStrategy_base {
-    constructor();
+    private readonly authService;
+    constructor(authService: AuthService);
     validate(payload: JwtPayload): Promise<{
-        userId: string;
+        id: number;
         email: string;
+        firstname: string;
+        lastname: string;
+        hash: string;
+        hashRt: string | null;
+        age: number;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
 }
 export {};

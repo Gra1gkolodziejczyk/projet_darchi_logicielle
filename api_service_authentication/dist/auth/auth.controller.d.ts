@@ -10,17 +10,7 @@ export declare class AuthController {
     signIn(dto: LoginDto): Promise<Tokens>;
     signUp(dto: RegisterDto): Promise<Tokens>;
     signOut(userId: number): Promise<void>;
-    getUserId(userId: number): Promise<{
-        email: string;
-        hash: string;
-        firstname: string;
-        lastname: string;
-        age: number;
-        id: number;
-        hashRt: string | null;
-        createdAt: Date;
-        updatedAt: Date;
-    }>;
+    verifyToken(data: any): Promise<any>;
     refreshToken(userId: number, refreshToken: string): Promise<Tokens>;
     validateToken(token: string): boolean;
 }

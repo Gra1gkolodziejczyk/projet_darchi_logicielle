@@ -17,25 +17,21 @@ const car_dto_1 = require("../dto/car.dto");
 const common_1 = require("@nestjs/common");
 const car_service_1 = require("./car.service");
 const microservices_1 = require("@nestjs/microservices");
-const auth_guard_1 = require("../guard/auth-guard");
 let CarController = class CarController {
     constructor(carService) {
         this.carService = carService;
     }
-    async createCar(carDto, req) {
-        const userId = req.user.id;
-        return this.carService.createCar(carDto, userId);
+    async createCar(carDto) {
+        return this.carService.createCar(carDto);
     }
 };
 exports.CarController = CarController;
 __decorate([
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, microservices_1.MessagePattern)('CREATE_CAR'),
     (0, common_1.Post)('/create'),
     __param(0, (0, common_1.Body)()),
-    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [car_dto_1.CarDto, Object]),
+    __metadata("design:paramtypes", [car_dto_1.CarDto]),
     __metadata("design:returntype", Promise)
 ], CarController.prototype, "createCar", null);
 exports.CarController = CarController = __decorate([

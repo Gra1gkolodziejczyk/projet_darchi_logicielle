@@ -16,6 +16,11 @@ class CarDto {
 exports.CarDto = CarDto;
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], CarDto.prototype, "userId", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CarDto.prototype, "model", void 0);

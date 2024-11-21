@@ -5,7 +5,7 @@ import { Tokens } from './types/token.type';
 import LoginDto from '../dto/login.dto';
 import { AccessTokenAuthGuard, RefreshTokenAuthGuard } from './guards';
 import { GetCurrentUser, GetCurrentUserId } from './decorators';
-import { MessagePattern } from '@nestjs/microservices';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { JwtService } from '@nestjs/jwt';
 import {jwtConstants} from "./constant";
 
@@ -36,11 +36,17 @@ export class AuthController {
     return this.authService.signOut(userId);
   }
 
+  // @UseGuards(AccessTokenAuthGuard)
+  // @Get('/userId')
+  // @MessagePattern('USER_ID')
+  // getUserId(@GetCurrentUserId() userId: number) {
+  //   return this.authService.findUserById(userId);
+  // }
+
   @UseGuards(AccessTokenAuthGuard)
-  @Get('/userId')
-  @MessagePattern('USER_ID')
-  getUserId(@GetCurrentUserId() userId: number) {
-    return this.authService.findUserById(userId);
+  @MessagePattern('VERIFY_TOKEN')
+  async verifyToken(@Payload() data: any) {
+    return data.user
   }
 
   @UseGuards(RefreshTokenAuthGuard)
