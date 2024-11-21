@@ -23,7 +23,6 @@ export class CarController {
   }
 
   @UseGuards(AuthGuard)
-  @UseFilters(new ExceptionFilter())
   @Post('/create')
   createCar(@Body() payload: CarDto, @Req() req) {
     const user = req.user.sub;
