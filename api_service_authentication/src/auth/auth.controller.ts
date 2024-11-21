@@ -1,22 +1,21 @@
-import {
-  Body,
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import {Body, Controller, Get, Post, UseGuards} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import RegisterDto from '../dto/register.dto';
 import { Tokens } from './types/token.type';
 import LoginDto from '../dto/login.dto';
 import { AccessTokenAuthGuard, RefreshTokenAuthGuard } from './guards';
 import { GetCurrentUser, GetCurrentUserId } from './decorators';
-import {MessagePattern} from "@nestjs/microservices";
+import { MessagePattern } from '@nestjs/microservices';
+import { JwtService } from '@nestjs/jwt';
+import {jwtConstants} from "./constant";
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private jwtService: JwtService,
+  ) {
+  }
 
   @Post('/signin')
   @MessagePattern('AUTHENTICATED_USER')
@@ -37,6 +36,13 @@ export class AuthController {
     return this.authService.signOut(userId);
   }
 
+  @UseGuards(AccessTokenAuthGuard)
+  @Get('/userId')
+  @MessagePattern('USER_ID')
+  getUserId(@GetCurrentUserId() userId: number) {
+    return this.authService.findUserById(userId);
+  }
+
   @UseGuards(RefreshTokenAuthGuard)
   @Post('/refresh')
   @MessagePattern('REFRESHED_TOKEN')
@@ -45,5 +51,18 @@ export class AuthController {
     @GetCurrentUser('refreshToken') refreshToken: string,
   ) {
     return this.authService.refreshToken(userId, refreshToken);
+  }
+
+  @MessagePattern('VALIDATE_TOKEN')
+  validateToken(token: string): boolean {
+    try {
+      const decoded = this.jwtService.verify(token, {
+        secret: jwtConstants.secret,
+      });
+      return decoded ? true : false;
+    } catch (err) {
+      console.error('Token validation failed:', err.message);
+      return false;
+    }
   }
 }

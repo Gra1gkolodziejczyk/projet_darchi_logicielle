@@ -11,7 +11,19 @@ export declare class AuthService {
     signUp(dto: RegisterDto): Promise<Tokens>;
     refreshToken(userId: number, refreshToken: string): Promise<Tokens>;
     signOut(userId: number): Promise<void>;
+    findUserById(userId: number): Promise<{
+        email: string;
+        hash: string;
+        firstname: string;
+        lastname: string;
+        age: number;
+        id: number;
+        hashRt: string | null;
+        createdAt: Date;
+        updatedAt: Date;
+    }>;
     updateRefreshToken(userId: number, refreshToken: string): Promise<void>;
     hashData(data: string): Promise<string>;
     getTokens(userId: number, email: string): Promise<Tokens>;
+    validateAccessToken(token: string): Promise<any>;
 }

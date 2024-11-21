@@ -12,7 +12,7 @@ const car_controller_1 = require("./car.controller");
 const car_service_1 = require("./car.service");
 const prisma_module_1 = require("../prisma/prisma.module");
 const prisma_service_1 = require("../prisma/prisma.service");
-const auth_service_1 = require("../auth/auth.service");
+const jwt_1 = require("@nestjs/jwt");
 let CarModule = class CarModule {
 };
 exports.CarModule = CarModule;
@@ -20,7 +20,7 @@ exports.CarModule = CarModule = __decorate([
     (0, common_1.Module)({
         imports: [prisma_module_1.PrismaModule],
         controllers: [car_controller_1.CarController],
-        providers: [car_service_1.CarService, prisma_service_1.PrismaService, auth_service_1.AuthClientService],
+        providers: [car_service_1.CarService, prisma_service_1.PrismaService, jwt_1.JwtService],
     })
 ], CarModule);
 //# sourceMappingURL=car.module.js.map

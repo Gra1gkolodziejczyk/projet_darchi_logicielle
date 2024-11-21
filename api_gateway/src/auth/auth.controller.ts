@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import {
   ClientProxy,
   ClientProxyFactory,
@@ -38,5 +38,10 @@ export class AuthController {
   @Post('refreshToken')
   async refreshToken(@Body() refreshToken: string) {
     return this.client.send('REFRESHED_TOKEN', refreshToken);
+  }
+
+  @Get('userId')
+  async getUserId(@Body() userId: number) {
+    return this.client.send('USER_ID', userId);
   }
 }

@@ -20,9 +20,12 @@ const login_dto_1 = require("../dto/login.dto");
 const guards_1 = require("./guards");
 const decorators_1 = require("./decorators");
 const microservices_1 = require("@nestjs/microservices");
+const jwt_1 = require("@nestjs/jwt");
+const constant_1 = require("./constant");
 let AuthController = class AuthController {
-    constructor(authService) {
+    constructor(authService, jwtService) {
         this.authService = authService;
+        this.jwtService = jwtService;
     }
     signIn(dto) {
         return this.authService.signIn(dto);
@@ -33,8 +36,23 @@ let AuthController = class AuthController {
     signOut(userId) {
         return this.authService.signOut(userId);
     }
+    getUserId(userId) {
+        return this.authService.findUserById(userId);
+    }
     refreshToken(userId, refreshToken) {
         return this.authService.refreshToken(userId, refreshToken);
+    }
+    validateToken(token) {
+        try {
+            const decoded = this.jwtService.verify(token, {
+                secret: constant_1.jwtConstants.secret,
+            });
+            return decoded ? true : false;
+        }
+        catch (err) {
+            console.error('Token validation failed:', err.message);
+            return false;
+        }
     }
 };
 exports.AuthController = AuthController;
@@ -64,6 +82,15 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "signOut", null);
 __decorate([
+    (0, common_1.UseGuards)(guards_1.AccessTokenAuthGuard),
+    (0, common_1.Get)('/userId'),
+    (0, microservices_1.MessagePattern)('USER_ID'),
+    __param(0, (0, decorators_1.GetCurrentUserId)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "getUserId", null);
+__decorate([
     (0, common_1.UseGuards)(guards_1.RefreshTokenAuthGuard),
     (0, common_1.Post)('/refresh'),
     (0, microservices_1.MessagePattern)('REFRESHED_TOKEN'),
@@ -73,8 +100,15 @@ __decorate([
     __metadata("design:paramtypes", [Number, String]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "refreshToken", null);
+__decorate([
+    (0, microservices_1.MessagePattern)('VALIDATE_TOKEN'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Boolean)
+], AuthController.prototype, "validateToken", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
-    __metadata("design:paramtypes", [auth_service_1.AuthService])
+    __metadata("design:paramtypes", [auth_service_1.AuthService,
+        jwt_1.JwtService])
 ], AuthController);
 //# sourceMappingURL=auth.controller.js.map

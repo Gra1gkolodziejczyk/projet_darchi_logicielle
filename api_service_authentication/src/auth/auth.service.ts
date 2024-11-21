@@ -20,7 +20,7 @@ export class AuthService {
 
     if (!user) throw new ForbiddenException('Access denied');
 
-    const passwordMatches = await bcrypt.compare(dto.password, user.hash);
+    const passwordMatches = await bcrypt.compare(dto.hash, user.hash);
 
     if (!passwordMatches) throw new ForbiddenException('Access denied');
 
@@ -78,6 +78,15 @@ export class AuthService {
     });
   }
 
+  async findUserById(userId: number) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+    return user;
+  }
+
   async updateRefreshToken(userId: number, refreshToken: string) {
     const hash = await this.hashData(refreshToken);
     await this.prisma.user.update({
@@ -104,17 +113,38 @@ export class AuthService {
         { sub: userId, email },
         {
           secret: jwtConstants.secret,
-          expiresIn: 60 * 15, // 15 minutes
+          expiresIn: '1h', // 1 heure
         },
       ),
       this.jwtService.signAsync(
         { sub: userId, email },
         {
           secret: jwtConstants.secret,
-          expiresIn: 60 * 60 * 24 * 7, // 7 jours
+          expiresIn: '7d', // 7 jours
         },
       ),
     ]);
     return { access_token: accessToken, refresh_token: refreshToken };
+  }
+
+  async validateAccessToken(token: string): Promise<any> {
+    try {
+      const decoded = this.jwtService.verify(token, {
+        secret: jwtConstants.secret,
+      });
+
+      // Cherche l'utilisateur dans la BDD en fonction du "sub" (userId)
+      const user = await this.prisma.user.findUnique({
+        where: {
+          id: decoded.sub,
+        },
+      });
+
+      if (!user)
+        throw new ForbiddenException('Invalid token or user not found');
+      return user; // retourne l'utilisateur si tout est valide
+    } catch (error) {
+      throw new ForbiddenException('Invalid or expired token');
+    }
   }
 }

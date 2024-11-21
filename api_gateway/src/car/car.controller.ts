@@ -1,10 +1,12 @@
-import { Body, Controller, Post, Req } from '@nestjs/common';
+import {Body, Controller, Post, Req, UseFilters, UseGuards} from '@nestjs/common';
 import {
   ClientProxy,
   ClientProxyFactory,
   Transport,
 } from '@nestjs/microservices';
 import { CarDto } from './dto';
+import { AuthGuard } from '../guard/auth-guard';
+import { ExceptionFilter } from '../filters/rpc-exception.filter';
 
 @Controller('car')
 export class CarController {
@@ -20,8 +22,11 @@ export class CarController {
     });
   }
 
+  @UseGuards(AuthGuard)
+  @UseFilters(new ExceptionFilter())
   @Post('/create')
-  async createCar(@Body() payload: CarDto, @Req() req) {
-    return this.client.send('CREATE_CAR', payload);
+  createCar(@Body() payload: CarDto, @Req() req) {
+    const user = req.user.sub;
+    return this.client.send('CREATE_CAR', { ...payload, userId: user });
   }
 }

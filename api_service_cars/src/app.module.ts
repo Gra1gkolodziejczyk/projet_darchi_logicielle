@@ -5,12 +5,21 @@ import { CarController } from './cars/car.controller';
 import { CarService } from './cars/car.service';
 import { PrismaService } from './prisma/prisma.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { AuthClientService } from './auth/auth.service';
+import { ConfigModule } from '@nestjs/config';
+import { JwtModule, JwtService } from '@nestjs/jwt';
+import * as process from 'process';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+    }),
     PrismaModule,
     CarModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET || 'jesuislesecretjwt', // Assurez-vous que la clé est identique à celle de l'auth-service
+      signOptions: { expiresIn: '1h' },
+    }),
     ClientsModule.register([
       {
         name: 'CAR_SERVICE',
@@ -19,6 +28,6 @@ import { AuthClientService } from './auth/auth.service';
     ]),
   ],
   controllers: [CarController],
-  providers: [CarService, PrismaService, AuthClientService],
+  providers: [CarService, PrismaService, JwtService],
 })
 export class AppModule {}

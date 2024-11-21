@@ -15,15 +15,18 @@ const prisma_module_1 = require("./prisma/prisma.module");
 const prisma_service_1 = require("./prisma/prisma.service");
 const jwt_1 = require("@nestjs/jwt");
 const microservices_1 = require("@nestjs/microservices");
+const config_1 = require("@nestjs/config");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            config_1.ConfigModule.forRoot({
+                envFilePath: '.env',
+            }),
             auth_module_1.AuthModule,
             prisma_module_1.PrismaModule,
-            jwt_1.JwtModule,
             microservices_1.ClientsModule.register([
                 {
                     name: 'AUTHENTICATION',

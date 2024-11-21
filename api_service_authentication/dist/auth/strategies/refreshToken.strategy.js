@@ -24,9 +24,16 @@ let RefreshTokenStrategy = class RefreshTokenStrategy extends (0, passport_1.Pas
         });
     }
     async validate(req, payload) {
-        const refreshToken = req.get('authorization')?.replace('Bearer', '').trim();
-        if (!refreshToken)
+        console.log(req.headers);
+        console.log(req.headers.authorization);
+        const authHeader = req.headers.authorization;
+        if (!authHeader) {
+            throw new common_1.ForbiddenException('Authorization header is missing');
+        }
+        const refreshToken = authHeader.replace('Bearer', '').trim();
+        if (!refreshToken) {
             throw new common_1.ForbiddenException('Refresh token missing');
+        }
         return {
             userId: payload.sub,
             email: payload.email,

@@ -4,6 +4,6 @@ exports.GetCurrentUserId = void 0;
 const common_1 = require("@nestjs/common");
 exports.GetCurrentUserId = (0, common_1.createParamDecorator)((data, context) => {
     const request = context.switchToHttp().getRequest();
-    return request.user['sub'];
+    return request.user.id;
 });
 //# sourceMappingURL=get-current-user-id.decorator.js.map

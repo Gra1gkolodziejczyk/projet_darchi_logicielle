@@ -14,15 +14,24 @@ const car_controller_1 = require("./cars/car.controller");
 const car_service_1 = require("./cars/car.service");
 const prisma_service_1 = require("./prisma/prisma.service");
 const microservices_1 = require("@nestjs/microservices");
-const auth_service_1 = require("./auth/auth.service");
+const config_1 = require("@nestjs/config");
+const jwt_1 = require("@nestjs/jwt");
+const process = require("process");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            config_1.ConfigModule.forRoot({
+                envFilePath: '.env',
+            }),
             prisma_module_1.PrismaModule,
             car_module_1.CarModule,
+            jwt_1.JwtModule.register({
+                secret: process.env.JWT_SECRET || 'jesuislesecretjwt',
+                signOptions: { expiresIn: '1h' },
+            }),
             microservices_1.ClientsModule.register([
                 {
                     name: 'CAR_SERVICE',
@@ -31,7 +40,7 @@ exports.AppModule = AppModule = __decorate([
             ]),
         ],
         controllers: [car_controller_1.CarController],
-        providers: [car_service_1.CarService, prisma_service_1.PrismaService, auth_service_1.AuthClientService],
+        providers: [car_service_1.CarService, prisma_service_1.PrismaService, jwt_1.JwtService],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

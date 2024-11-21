@@ -5,7 +5,7 @@ import { CarDto } from '../dto/car.dto';
 @Injectable()
 export class CarService {
   constructor(private prisma: PrismaService) {}
-  async createCar(carDto: CarDto, userId = 1) {
+  async createCar(carDto: CarDto, userId: number) {
     const car = await this.prisma.car.create({
       data: {
         userId: userId,

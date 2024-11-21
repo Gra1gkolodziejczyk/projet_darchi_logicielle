@@ -24,9 +24,19 @@ export class RefreshTokenStrategy extends PassportStrategy(
   }
 
   async validate(req: Request, payload: JwtPayload) {
-    const refreshToken = req.get('authorization')?.replace('Bearer', '').trim();
+    console.log(req.headers);
+    console.log(req.headers.authorization);
+    const authHeader = req.headers.authorization;
 
-    if (!refreshToken) throw new ForbiddenException('Refresh token missing');
+    if (!authHeader) {
+      throw new ForbiddenException('Authorization header is missing');
+    }
+
+    const refreshToken = authHeader.replace('Bearer', '').trim(); // Retirer "Bearer"
+
+    if (!refreshToken) {
+      throw new ForbiddenException('Refresh token missing');
+    }
 
     return {
       userId: payload.sub,

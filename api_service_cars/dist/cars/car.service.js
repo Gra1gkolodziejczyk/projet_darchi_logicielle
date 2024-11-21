@@ -16,7 +16,7 @@ let CarService = class CarService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    async createCar(carDto, userId = 1) {
+    async createCar(carDto, userId) {
         const car = await this.prisma.car.create({
             data: {
                 userId: userId,

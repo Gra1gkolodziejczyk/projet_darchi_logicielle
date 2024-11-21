@@ -28,7 +28,7 @@ let AuthService = class AuthService {
         });
         if (!user)
             throw new common_1.ForbiddenException('Access denied');
-        const passwordMatches = await bcrypt.compare(dto.password, user.hash);
+        const passwordMatches = await bcrypt.compare(dto.hash, user.hash);
         if (!passwordMatches)
             throw new common_1.ForbiddenException('Access denied');
         const tokens = await this.getTokens(user.id, user.email);
@@ -78,6 +78,14 @@ let AuthService = class AuthService {
             },
         });
     }
+    async findUserById(userId) {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                id: userId,
+            },
+        });
+        return user;
+    }
     async updateRefreshToken(userId, refreshToken) {
         const hash = await this.hashData(refreshToken);
         await this.prisma.user.update({
@@ -100,14 +108,32 @@ let AuthService = class AuthService {
         const [accessToken, refreshToken] = await Promise.all([
             this.jwtService.signAsync({ sub: userId, email }, {
                 secret: constant_1.jwtConstants.secret,
-                expiresIn: 60 * 15,
+                expiresIn: '1h',
             }),
             this.jwtService.signAsync({ sub: userId, email }, {
                 secret: constant_1.jwtConstants.secret,
-                expiresIn: 60 * 60 * 24 * 7,
+                expiresIn: '7d',
             }),
         ]);
         return { access_token: accessToken, refresh_token: refreshToken };
+    }
+    async validateAccessToken(token) {
+        try {
+            const decoded = this.jwtService.verify(token, {
+                secret: constant_1.jwtConstants.secret,
+            });
+            const user = await this.prisma.user.findUnique({
+                where: {
+                    id: decoded.sub,
+                },
+            });
+            if (!user)
+                throw new common_1.ForbiddenException('Invalid token or user not found');
+            return user;
+        }
+        catch (error) {
+            throw new common_1.ForbiddenException('Invalid or expired token');
+        }
     }
 };
 exports.AuthService = AuthService;

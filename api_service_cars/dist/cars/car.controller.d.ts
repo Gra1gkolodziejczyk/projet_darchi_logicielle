@@ -4,10 +4,10 @@ export declare class CarController {
     private readonly carService;
     constructor(carService: CarService);
     createCar(carDto: CarDto, req: any): Promise<{
-        userId: number;
         model: string;
         brand: string;
         color: string;
+        userId: number;
         createdAt: Date;
         updatedAt: Date;
         id: number;

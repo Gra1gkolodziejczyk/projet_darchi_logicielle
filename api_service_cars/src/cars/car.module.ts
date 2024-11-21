@@ -3,11 +3,11 @@ import { CarController } from './car.controller';
 import { CarService } from './car.service';
 import { PrismaModule } from '../prisma/prisma.module';
 import { PrismaService } from '../prisma/prisma.service';
-import { AuthClientService } from '../auth/auth.service';
+import {JwtService} from "@nestjs/jwt";
 
 @Module({
   imports: [PrismaModule],
   controllers: [CarController],
-  providers: [CarService, PrismaService, AuthClientService],
+  providers: [CarService, PrismaService, JwtService],
 })
 export class CarModule {}
