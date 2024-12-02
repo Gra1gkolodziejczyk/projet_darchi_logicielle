@@ -8,7 +8,6 @@ import {
   Param,
   Req,
   UseGuards,
-  UseFilters,
 } from '@nestjs/common';
 import {
   ClientProxy,

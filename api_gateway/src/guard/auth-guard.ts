@@ -25,7 +25,9 @@ export class AuthGuard implements CanActivate {
     });
   }
 
-  canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+  canActivate(
+    context: ExecutionContext,
+  ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
 
     if (!request.headers || !request.headers.authorization) {
@@ -38,21 +40,22 @@ export class AuthGuard implements CanActivate {
     //  });
     //  request.user = payload;
     //  return true;
-//
-//
+    //
+    //
     //} catch (error) {
     //  throw new UnauthorizedException('Invalid or expired token');
     //}
 
-    return this.client.send('VERIFY_TOKEN', {
-      headers: request.headers
-    })
-    .pipe(
-      tap((res) => {
-        request.user = res
-      }),
-      map(() => true),
-      catchError(() => of(false))
-    )
+    return this.client
+      .send('VERIFY_TOKEN', {
+        headers: request.headers,
+      })
+      .pipe(
+        tap((res) => {
+          request.user = res;
+        }),
+        map(() => true),
+        catchError(() => of(false)),
+      );
   }
 }
