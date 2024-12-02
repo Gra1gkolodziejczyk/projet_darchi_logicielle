@@ -11,10 +11,10 @@ export declare class AccessTokenStrategy extends AccessTokenStrategy_base {
     validate(payload: JwtPayload): Promise<{
         id: number;
         email: string;
-        firstname: string;
-        lastname: string;
         hash: string;
         hashRt: string | null;
+        firstname: string;
+        lastname: string;
         age: number;
         createdAt: Date;
         updatedAt: Date;

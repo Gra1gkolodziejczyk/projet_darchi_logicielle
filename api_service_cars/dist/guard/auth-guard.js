@@ -27,8 +27,6 @@ let AuthGuard = class AuthGuard {
     }
     async canActivate(context) {
         const request = context.switchToHttp().getRequest();
-        console.log(request.headers?.authorization);
-        console.log(request.headers);
         const token = request.headers?.authorization;
         if (!token) {
             throw new common_1.UnauthorizedException('Authorization header is missing');
@@ -38,7 +36,6 @@ let AuthGuard = class AuthGuard {
                 secret: 'jesuislesecretjwt',
             });
             const userId = payload.sub;
-            console.log(userId);
             const user = await (0, rxjs_1.firstValueFrom)(this.client.send('USER_ID', userId));
             request.user = user;
             return true;

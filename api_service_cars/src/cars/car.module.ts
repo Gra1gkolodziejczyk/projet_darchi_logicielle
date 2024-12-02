@@ -3,7 +3,7 @@ import { CarController } from './car.controller';
 import { CarService } from './car.service';
 import { PrismaModule } from '../prisma/prisma.module';
 import { PrismaService } from '../prisma/prisma.service';
-import {JwtService} from "@nestjs/jwt";
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [PrismaModule],

@@ -12,4 +12,40 @@ export declare class CarController {
         updatedAt: Date;
         id: number;
     }>;
+    updateCar(id: number, carDto: CarDto): Promise<{
+        userId: number;
+        model: string;
+        brand: string;
+        color: string;
+        createdAt: Date;
+        updatedAt: Date;
+        id: number;
+    }>;
+    deleteCar(id: number): Promise<{
+        userId: number;
+        model: string;
+        brand: string;
+        color: string;
+        createdAt: Date;
+        updatedAt: Date;
+        id: number;
+    }>;
+    getAllCars(): Promise<{
+        userId: number;
+        model: string;
+        brand: string;
+        color: string;
+        createdAt: Date;
+        updatedAt: Date;
+        id: number;
+    }[]>;
+    getCarById(id: number): Promise<{
+        userId: number;
+        model: string;
+        brand: string;
+        color: string;
+        createdAt: Date;
+        updatedAt: Date;
+        id: number;
+    }>;
 }

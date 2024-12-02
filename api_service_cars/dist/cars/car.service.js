@@ -27,6 +27,34 @@ let CarService = class CarService {
         });
         return car;
     }
+    async updateCar(id, carDto) {
+        const car = await this.prisma.car.update({
+            where: { id: id },
+            data: {
+                userId: carDto.userId,
+                model: carDto.model,
+                brand: carDto.brand,
+                color: carDto.color,
+            },
+        });
+        return car;
+    }
+    async deleteCar(id) {
+        const car = await this.prisma.car.delete({
+            where: { id },
+        });
+        return car;
+    }
+    async getCarById(id) {
+        const car = await this.prisma.car.findUnique({
+            where: { id },
+        });
+        return car;
+    }
+    async getAllCars() {
+        const cars = await this.prisma.car.findMany();
+        return cars;
+    }
 };
 exports.CarService = CarService;
 exports.CarService = CarService = __decorate([

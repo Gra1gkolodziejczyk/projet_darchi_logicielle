@@ -24,6 +24,18 @@ let CarController = class CarController {
     async createCar(carDto) {
         return this.carService.createCar(carDto);
     }
+    updateCar(id, carDto) {
+        return this.carService.updateCar(id, carDto);
+    }
+    deleteCar(id) {
+        return this.carService.deleteCar(id);
+    }
+    getAllCars() {
+        return this.carService.getAllCars();
+    }
+    getCarById(id) {
+        return this.carService.getCarById(id);
+    }
 };
 exports.CarController = CarController;
 __decorate([
@@ -34,6 +46,38 @@ __decorate([
     __metadata("design:paramtypes", [car_dto_1.CarDto]),
     __metadata("design:returntype", Promise)
 ], CarController.prototype, "createCar", null);
+__decorate([
+    (0, microservices_1.MessagePattern)('UPDATE_CAR'),
+    (0, common_1.Put)('/update/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, car_dto_1.CarDto]),
+    __metadata("design:returntype", void 0)
+], CarController.prototype, "updateCar", null);
+__decorate([
+    (0, microservices_1.MessagePattern)('DELETE_CAR'),
+    (0, common_1.Delete)('/delete/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], CarController.prototype, "deleteCar", null);
+__decorate([
+    (0, microservices_1.MessagePattern)('GET_CARS'),
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], CarController.prototype, "getAllCars", null);
+__decorate([
+    (0, microservices_1.MessagePattern)('GET_CAR_ID'),
+    (0, common_1.Get)('/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], CarController.prototype, "getCarById", null);
 exports.CarController = CarController = __decorate([
     (0, common_1.Controller)('car'),
     __metadata("design:paramtypes", [car_service_1.CarService])
