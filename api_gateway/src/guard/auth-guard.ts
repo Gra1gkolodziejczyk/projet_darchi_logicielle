@@ -34,18 +34,6 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException('Authorization header is missing');
     }
 
-    //try {
-    //  const payload = this.jwtService.verify(token, {
-    //    secret: 'jesuislesecretjwt',
-    //  });
-    //  request.user = payload;
-    //  return true;
-    //
-    //
-    //} catch (error) {
-    //  throw new UnauthorizedException('Invalid or expired token');
-    //}
-
     return this.client
       .send('VERIFY_TOKEN', {
         headers: request.headers,

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ClientsModule, Transport} from '@nestjs/microservices';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AuthController } from './auth/auth.controller';
 import { CarController } from './car/car.controller';
 import { JwtService } from '@nestjs/jwt';
