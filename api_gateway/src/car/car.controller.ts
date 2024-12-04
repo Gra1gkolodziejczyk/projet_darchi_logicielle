@@ -8,6 +8,7 @@ import {
   Param,
   Req,
   UseGuards,
+  ForbiddenException,
 } from '@nestjs/common';
 import {
   ClientProxy,
@@ -33,8 +34,14 @@ export class CarController {
 
   @UseGuards(AuthGuard)
   @Post('/create')
-  createCar(@Body() payload: CarDto, @Req() req) {
-    return this.client.send('CREATE_CAR', { ...payload, userId: req.user.id });
+  async createCar(@Body() payload: CarDto, @Req() req) {
+    const user = req.user;
+    if (!user) {
+      throw new ForbiddenException('Access denied');
+    }
+
+    // Ajoutez l'id de l'utilisateur à la payload avant de l'envoyer
+    return this.client.send('CREATE_CAR', { ...payload, userId: user.id });
   }
 
   @UseGuards(AuthGuard)

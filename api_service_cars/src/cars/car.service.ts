@@ -19,7 +19,7 @@ export class CarService {
 
   async updateCar(id: number, carDto: CarDto) {
     const car = await this.prisma.car.update({
-      where: { id: id },
+      where: { id: id, userId: carDto.userId },
       data: {
         userId: carDto.userId,
         model: carDto.model,

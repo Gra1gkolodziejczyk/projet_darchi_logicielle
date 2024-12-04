@@ -18,11 +18,11 @@ export class AuthService {
       },
     });
 
-    if (!user) throw new ForbiddenException('Access denied');
-
     const passwordMatches = await bcrypt.compare(dto.hash, user.hash);
 
-    if (!passwordMatches) throw new ForbiddenException('Access denied');
+    if (!user || !passwordMatches) {
+      throw new ForbiddenException('Invalid credentials');
+    }
 
     const tokens = await this.getTokens(user.id, user.email);
     await this.updateRefreshToken(user.id, tokens.refresh_token);

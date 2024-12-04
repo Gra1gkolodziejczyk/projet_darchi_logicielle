@@ -26,11 +26,10 @@ let AuthService = class AuthService {
                 email: dto.email,
             },
         });
-        if (!user)
-            throw new common_1.ForbiddenException('Access denied');
         const passwordMatches = await bcrypt.compare(dto.hash, user.hash);
-        if (!passwordMatches)
-            throw new common_1.ForbiddenException('Access denied');
+        if (!user || !passwordMatches) {
+            throw new common_1.ForbiddenException('Invalid credentials');
+        }
         const tokens = await this.getTokens(user.id, user.email);
         await this.updateRefreshToken(user.id, tokens.refresh_token);
         return tokens;
