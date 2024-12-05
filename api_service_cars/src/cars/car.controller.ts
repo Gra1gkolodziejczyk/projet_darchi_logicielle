@@ -16,21 +16,19 @@ export class CarController {
   constructor(private readonly carService: CarService) {}
 
   @MessagePattern('CREATE_CAR')
-  @Post('/create')
   async createCar(@Body() carDto: CarDto) {
     return this.carService.createCar(carDto);
   }
 
   @MessagePattern('UPDATE_CAR')
   @Put('/update/:id')
-  updateCar(@Param('id') id: number, @Body() carDto: CarDto) {
-    return this.carService.updateCar(id, carDto);
+  updateCar(@Body() carDto: CarDto & { id: string }) {
+    return this.carService.updateCar(carDto);
   }
 
   @MessagePattern('DELETE_CAR')
-  @Delete('/delete/:id')
-  deleteCar(@Param('id') id: number) {
-    return this.carService.deleteCar(id);
+  deleteCar(id: string) {
+    return this.carService.deleteCar(parseInt(id));
   }
 
   @MessagePattern('GET_CARS')
@@ -40,8 +38,7 @@ export class CarController {
   }
 
   @MessagePattern('GET_CAR_ID')
-  @Get('/:id')
-  getCarById(@Param('id') id: number) {
-    return this.carService.getCarById(id);
+  getCarById(id: string) {
+    return this.carService.getCarById(parseInt(id));
   }
 }

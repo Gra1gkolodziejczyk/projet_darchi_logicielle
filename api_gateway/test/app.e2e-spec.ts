@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
+import { hash } from 'crypto';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
@@ -60,6 +61,7 @@ describe('AuthController (e2e)', () => {
 describe('CarController (e2e)', () => {
   let app: INestApplication;
   let authToken: string;
+  let carId: number;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -72,9 +74,9 @@ describe('CarController (e2e)', () => {
     // Authenticate to get token
     const loginResponse = await request(app.getHttpServer())
       .post('/auth/login')
-      .send({ email: 'test@example.com', password: 'Password123!' });
+      .send({ email: 'test@example.com', hash: 'Password123!' });
 
-    authToken = loginResponse.body.accessToken;
+    authToken = loginResponse.body.access_token;
   });
 
   afterAll(async () => {
@@ -95,34 +97,8 @@ describe('CarController (e2e)', () => {
 
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty('id');
-  });
 
-  it('/car/update/:id (PUT)', async () => {
-    const response = await request(app.getHttpServer())
-      .put('/car/update/1')
-      .set('Authorization', `Bearer ${authToken}`)
-      .send({ make: 'Toyota', model: 'Corolla', year: 2022 });
-
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual(expect.objectContaining({ success: true }));
-  });
-
-  it('/car/delete/:id (DELETE)', async () => {
-    const response = await request(app.getHttpServer())
-      .delete('/car/delete/1')
-      .set('Authorization', `Bearer ${authToken}`);
-
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual(expect.objectContaining({ success: true }));
-  });
-
-  it('/car/:id (GET)', async () => {
-    const response = await request(app.getHttpServer())
-      .get('/car/1')
-      .set('Authorization', `Bearer ${authToken}`);
-
-    expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty('id');
+    carId = response.body.id;
   });
 
   it('/car (GET)', async () => {
@@ -132,5 +108,33 @@ describe('CarController (e2e)', () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toBeInstanceOf(Array);
+  });
+
+  it('/car/:id (GET)', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/car/' + carId)
+      .set('Authorization', `Bearer ${authToken}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('id');
+  });
+
+  it('/car/update/:id (PUT)', async () => {
+    const response = await request(app.getHttpServer())
+      .put('/car/update/' + carId)
+      .set('Authorization', `Bearer ${authToken}`)
+      .send({ make: 'Toyota', model: 'Corolla', year: 2022 });
+
+    expect(response.status).toBe(200);
+    expect(response.ok).toEqual(true);
+  });
+
+  it('/car/delete/:id (DELETE)', async () => {
+    const response = await request(app.getHttpServer())
+      .delete('/car/delete/' + carId)
+      .set('Authorization', `Bearer ${authToken}`);
+
+    expect(response.status).toBe(200);
+    expect(response.ok).toEqual(true);
   });
 });

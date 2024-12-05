@@ -57,13 +57,13 @@ export class CarController {
   @UseGuards(AuthGuard)
   @Delete('/delete/:id')
   deleteCar(@Param('id') id: number) {
-    return this.client.send('DELETE_CAR', { id });
+    return this.client.send('DELETE_CAR', id);
   }
 
   @UseGuards(AuthGuard)
   @Get('/:id')
   getCarById(@Param('id') id: number) {
-    return this.client.send('GET_CAR_ID', { id });
+    return this.client.send('GET_CAR_ID', id);
   }
 
   @UseGuards(AuthGuard)
