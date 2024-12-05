@@ -12,7 +12,9 @@ export declare class CarController {
         updatedAt: Date;
         id: number;
     }>;
-    updateCar(id: number, carDto: CarDto): Promise<{
+    updateCar(carDto: CarDto & {
+        id: string;
+    }): Promise<{
         userId: number;
         model: string;
         brand: string;
@@ -21,7 +23,7 @@ export declare class CarController {
         updatedAt: Date;
         id: number;
     }>;
-    deleteCar(id: number): Promise<{
+    deleteCar(id: string): Promise<{
         userId: number;
         model: string;
         brand: string;
@@ -39,7 +41,7 @@ export declare class CarController {
         updatedAt: Date;
         id: number;
     }[]>;
-    getCarById(id: number): Promise<{
+    getCarById(id: string): Promise<{
         userId: number;
         model: string;
         brand: string;

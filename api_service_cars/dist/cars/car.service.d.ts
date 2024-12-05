@@ -12,7 +12,9 @@ export declare class CarService {
         updatedAt: Date;
         id: number;
     }>;
-    updateCar(id: number, carDto: CarDto): Promise<{
+    updateCar(carDto: CarDto & {
+        id: string;
+    }): Promise<{
         userId: number;
         model: string;
         brand: string;
