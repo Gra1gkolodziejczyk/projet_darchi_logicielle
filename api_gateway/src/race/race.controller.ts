@@ -1,4 +1,4 @@
-import {Body, Controller, ForbiddenException, Get, Param, Post, Req, UseGuards} from '@nestjs/common';
+import {Body, Controller, Delete, ForbiddenException, Get, Param, Post, Put, Req, UseGuards} from '@nestjs/common';
 import {
   ClientProxy,
   ClientProxyFactory,
@@ -43,5 +43,20 @@ export class RaceController {
     }
 
     return this.client.send('CREATE_RACE', { ...payload });
+  }
+
+  @UseGuards(AuthGuard)
+  @Put('/update/:id')
+  updateCar(@Param('id') id: number, @Body() payload: RaceDto, @Req() req) {
+    return this.client.send('UPDATE_RACE', {
+      id: id,
+      ...payload,
+    });
+  }
+
+  @UseGuards(AuthGuard)
+  @Delete('/delete/:id')
+  deleteRace(@Param('id') id: number) {
+    return this.client.send('DELETE_RACE', id);
   }
 }

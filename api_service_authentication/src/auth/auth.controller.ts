@@ -65,7 +65,7 @@ export class AuthController {
   }
 
   @MessagePattern('GET_MY_USER')
-  getUser(@GetCurrentUserId() userId: number) {
-    return this.authService.getUser(userId);
+  async getUserFromMessage(@GetCurrentUserId() userId: number) {
+    return this.authService.getUserById(userId);
   }
 }

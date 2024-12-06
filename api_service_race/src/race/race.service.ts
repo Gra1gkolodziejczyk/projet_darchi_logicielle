@@ -18,9 +18,9 @@ export class RaceService {
     return race;
   }
 
-  async updateRace(raceDto: RaceDto & { id: number }) {
+  async updateRace(raceDto: RaceDto & { id: string }) {
     const race = await this.prisma.race.update({
-      where: { id: raceDto.id },
+      where: { id: parseInt(raceDto.id) },
       data: {
         name: raceDto.name,
         date: raceDto.date,

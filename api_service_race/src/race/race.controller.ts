@@ -27,7 +27,7 @@ export class RaceController {
 
   @MessagePattern('UPDATE_RACE')
   @Put('/update/:id')
-  updateRace(@Body() raceDto: RaceDto & { id: number }) {
+  updateRace(@Body() raceDto: RaceDto & { id: string }) {
     return this.raceService.updateRace(raceDto);
   }
 

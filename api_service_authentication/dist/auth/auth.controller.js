@@ -54,8 +54,8 @@ let AuthController = class AuthController {
             return false;
         }
     }
-    getUser(userId) {
-        return this.authService.getUser(userId);
+    async getUserFromMessage(userId) {
+        return this.authService.getUserById(userId);
     }
 };
 exports.AuthController = AuthController;
@@ -113,8 +113,8 @@ __decorate([
     __param(0, (0, decorators_1.GetCurrentUserId)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "getUser", null);
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "getUserFromMessage", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService,
