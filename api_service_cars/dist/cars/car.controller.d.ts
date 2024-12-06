@@ -5,6 +5,7 @@ export declare class CarController {
     constructor(carService: CarService);
     createCar(carDto: CarDto): Promise<{
         userId: number;
+        image: string;
         model: string;
         brand: string;
         color: string;
@@ -16,6 +17,7 @@ export declare class CarController {
         id: string;
     }): Promise<{
         userId: number;
+        image: string;
         model: string;
         brand: string;
         color: string;
@@ -25,6 +27,7 @@ export declare class CarController {
     }>;
     deleteCar(id: string): Promise<{
         userId: number;
+        image: string;
         model: string;
         brand: string;
         color: string;
@@ -34,6 +37,7 @@ export declare class CarController {
     }>;
     getAllCars(): Promise<{
         userId: number;
+        image: string;
         model: string;
         brand: string;
         color: string;
@@ -43,6 +47,7 @@ export declare class CarController {
     }[]>;
     getCarById(id: string): Promise<{
         userId: number;
+        image: string;
         model: string;
         brand: string;
         color: string;

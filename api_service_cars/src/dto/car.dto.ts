@@ -6,6 +6,10 @@ export class CarDto {
 
   @IsNotEmpty()
   @IsString()
+  image: string;
+
+  @IsNotEmpty()
+  @IsString()
   model: string;
 
   @IsNotEmpty()

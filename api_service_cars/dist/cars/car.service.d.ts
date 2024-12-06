@@ -5,6 +5,7 @@ export declare class CarService {
     constructor(prisma: PrismaService);
     createCar(carDto: CarDto): Promise<{
         userId: number;
+        image: string;
         model: string;
         brand: string;
         color: string;
@@ -16,6 +17,7 @@ export declare class CarService {
         id: string;
     }): Promise<{
         userId: number;
+        image: string;
         model: string;
         brand: string;
         color: string;
@@ -25,6 +27,7 @@ export declare class CarService {
     }>;
     deleteCar(id: number): Promise<{
         userId: number;
+        image: string;
         model: string;
         brand: string;
         color: string;
@@ -34,6 +37,7 @@ export declare class CarService {
     }>;
     getCarById(id: number): Promise<{
         userId: number;
+        image: string;
         model: string;
         brand: string;
         color: string;
@@ -43,6 +47,7 @@ export declare class CarService {
     }>;
     getAllCars(): Promise<{
         userId: number;
+        image: string;
         model: string;
         brand: string;
         color: string;

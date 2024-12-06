@@ -1,13 +1,5 @@
 import { CarDto } from '../dto/car.dto';
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Get, Put } from '@nestjs/common';
 import { CarService } from './car.service';
 import { MessagePattern } from '@nestjs/microservices';
 

@@ -23,6 +23,11 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
+], CarDto.prototype, "image", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
 ], CarDto.prototype, "model", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),

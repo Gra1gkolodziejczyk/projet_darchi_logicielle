@@ -147,4 +147,13 @@ export class AuthService {
       throw new ForbiddenException('Invalid or expired token');
     }
   }
+
+  async getMyUser(userId: number) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+    return user;
+  }
 }

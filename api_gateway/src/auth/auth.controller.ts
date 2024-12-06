@@ -44,4 +44,9 @@ export class AuthController {
   async getUserId(@Body() userId: number) {
     return this.client.send('USER_ID', userId);
   }
+
+  @Get('myUser')
+  async getMyUser(@Body() userId: number) {
+    return this.client.send('GET_MY_USER', userId);
+  }
 }

@@ -23,6 +23,7 @@ let CarService = class CarService {
                 model: carDto.model,
                 brand: carDto.brand,
                 color: carDto.color,
+                image: carDto.image,
             },
         });
         return car;
@@ -31,6 +32,7 @@ let CarService = class CarService {
         const car = await this.prisma.car.update({
             where: { id: parseInt(carDto.id), userId: carDto.userId },
             data: {
+                image: carDto.image,
                 userId: carDto.userId,
                 model: carDto.model,
                 brand: carDto.brand,

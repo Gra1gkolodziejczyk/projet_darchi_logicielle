@@ -13,4 +13,5 @@ export declare class AuthController {
     verifyToken(data: any): Promise<any>;
     refreshToken(userId: number, refreshToken: string): Promise<Tokens>;
     validateToken(token: string): boolean;
+    getUser(userId: number): any;
 }

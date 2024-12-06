@@ -54,6 +54,9 @@ let AuthController = class AuthController {
             return false;
         }
     }
+    getUser(userId) {
+        return this.authService.getUser(userId);
+    }
 };
 exports.AuthController = AuthController;
 __decorate([
@@ -105,6 +108,13 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Boolean)
 ], AuthController.prototype, "validateToken", null);
+__decorate([
+    (0, microservices_1.MessagePattern)('GET_MY_USER'),
+    __param(0, (0, decorators_1.GetCurrentUserId)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "getUser", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService,

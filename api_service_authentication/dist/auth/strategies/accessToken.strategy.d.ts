@@ -9,13 +9,13 @@ export declare class AccessTokenStrategy extends AccessTokenStrategy_base {
     private readonly authService;
     constructor(authService: AuthService);
     validate(payload: JwtPayload): Promise<{
+        id: number;
         email: string;
         hash: string;
+        hashRt: string | null;
         firstname: string;
         lastname: string;
         age: number;
-        id: number;
-        hashRt: string | null;
         createdAt: Date;
         updatedAt: Date;
     }>;

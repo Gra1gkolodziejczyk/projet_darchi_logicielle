@@ -12,13 +12,13 @@ export declare class AuthService {
     refreshToken(userId: number, refreshToken: string): Promise<Tokens>;
     signOut(userId: number): Promise<void>;
     findUserById(userId: number): Promise<{
+        id: number;
         email: string;
         hash: string;
+        hashRt: string | null;
         firstname: string;
         lastname: string;
         age: number;
-        id: number;
-        hashRt: string | null;
         createdAt: Date;
         updatedAt: Date;
     }>;
@@ -26,4 +26,15 @@ export declare class AuthService {
     hashData(data: string): Promise<string>;
     getTokens(userId: number, email: string): Promise<Tokens>;
     validateAccessToken(token: string): Promise<any>;
+    getMyUser(userId: number): Promise<{
+        id: number;
+        email: string;
+        hash: string;
+        hashRt: string | null;
+        firstname: string;
+        lastname: string;
+        age: number;
+        createdAt: Date;
+        updatedAt: Date;
+    }>;
 }
