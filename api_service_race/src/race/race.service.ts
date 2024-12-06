@@ -47,5 +47,4 @@ export class RaceService {
     });
     return race;
   }
-
 }
