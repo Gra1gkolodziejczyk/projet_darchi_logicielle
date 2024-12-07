@@ -38,6 +38,16 @@ exports.AppModule = AppModule = __decorate([
                     transport: microservices_1.Transport.TCP,
                 },
             ]),
+            microservices_1.ClientsModule.register([
+                {
+                    name: 'RACE_SERVICE',
+                    transport: microservices_1.Transport.TCP,
+                    options: {
+                        host: 'localhost',
+                        port: 9004,
+                    },
+                },
+            ]),
         ],
         controllers: [car_controller_1.CarController],
         providers: [car_service_1.CarService, prisma_service_1.PrismaService, jwt_1.JwtService],

@@ -50,4 +50,13 @@ export class CarService {
     const cars = await this.prisma.car.findMany();
     return cars;
   }
+
+  async checkCar(carId: number): Promise<boolean> {
+    const car = await this.prisma.car.findUnique({
+      where: { id: carId },
+    });
+
+    // Retourne true si la voiture existe, sinon false
+    return !!car;
+  }
 }

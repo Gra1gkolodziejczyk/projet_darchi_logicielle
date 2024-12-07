@@ -1,12 +1,22 @@
-import {Body, Controller, Delete, ForbiddenException, Get, Param, Post, Put, Req, UseGuards} from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  ForbiddenException,
+  Get,
+  Param,
+  Post,
+  Put,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ClientProxy,
   ClientProxyFactory,
   Transport,
 } from '@nestjs/microservices';
 import { AuthGuard } from '../guard/auth-guard';
-import {CarDto} from "../car/dto";
-import {RaceDto} from "./dto";
+import { RaceDto } from './dto';
 
 @Controller('race')
 export class RaceController {
@@ -58,5 +68,20 @@ export class RaceController {
   @Delete('/delete/:id')
   deleteRace(@Param('id') id: number) {
     return this.client.send('DELETE_RACE', id);
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/:raceId/participants')
+  async addParticipant(
+    @Param('raceId') raceId: number,
+    @Body('carId') carId: number,
+    @Req() req,
+  ) {
+    const user = req.user;
+    if (!user) {
+      throw new ForbiddenException('Access denied');
+    }
+
+    return this.client.send('ADD_PARTICIPANT', { raceId, carId });
   }
 }

@@ -20,6 +20,16 @@ import * as process from 'process';
       secret: process.env.JWT_SECRET || 'jesuislesecretjwt', // Assurez-vous que la clé est identique à celle de l'auth-service
       signOptions: { expiresIn: '1h' },
     }),
+    // ClientsModule.register([
+    //   {
+    //     name: 'CAR_SERVICE',
+    //     transport: Transport.TCP,
+    //     options: {
+    //       host: 'localhost',
+    //       port: 9003,
+    //     },
+    //   },
+    // ]),
     ClientsModule.register([
       {
         name: 'RACE_SERVICE',

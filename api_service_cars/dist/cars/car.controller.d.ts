@@ -55,4 +55,7 @@ export declare class CarController {
         updatedAt: Date;
         id: number;
     }>;
+    checkCar({ carId }: {
+        carId: number;
+    }): Promise<boolean>;
 }

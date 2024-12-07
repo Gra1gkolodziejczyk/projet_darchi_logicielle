@@ -33,4 +33,10 @@ export class CarController {
   getCarById(id: string) {
     return this.carService.getCarById(parseInt(id));
   }
+
+  @MessagePattern('CHECK_CAR')
+  async checkCar({ carId }: { carId: number }): Promise<boolean> {
+    const car = await this.carService.checkCar(carId);
+    return !!car;
+  }
 }

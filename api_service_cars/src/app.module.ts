@@ -26,6 +26,16 @@ import * as process from 'process';
         transport: Transport.TCP,
       },
     ]),
+    ClientsModule.register([
+      {
+        name: 'RACE_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          host: 'localhost',
+          port: 9004,
+        },
+      },
+    ]),
   ],
   controllers: [CarController],
   providers: [CarService, PrismaService, JwtService],

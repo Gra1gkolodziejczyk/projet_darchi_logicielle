@@ -36,6 +36,10 @@ let CarController = class CarController {
     getCarById(id) {
         return this.carService.getCarById(parseInt(id));
     }
+    async checkCar({ carId }) {
+        const car = await this.carService.checkCar(carId);
+        return !!car;
+    }
 };
 exports.CarController = CarController;
 __decorate([
@@ -72,6 +76,12 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], CarController.prototype, "getCarById", null);
+__decorate([
+    (0, microservices_1.MessagePattern)('CHECK_CAR'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], CarController.prototype, "checkCar", null);
 exports.CarController = CarController = __decorate([
     (0, common_1.Controller)('car'),
     __metadata("design:paramtypes", [car_service_1.CarService])

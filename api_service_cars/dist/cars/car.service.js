@@ -57,6 +57,12 @@ let CarService = class CarService {
         const cars = await this.prisma.car.findMany();
         return cars;
     }
+    async checkCar(carId) {
+        const car = await this.prisma.car.findUnique({
+            where: { id: carId },
+        });
+        return !!car;
+    }
 };
 exports.CarService = CarService;
 exports.CarService = CarService = __decorate([

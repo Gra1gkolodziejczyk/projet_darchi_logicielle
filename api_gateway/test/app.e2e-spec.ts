@@ -83,16 +83,16 @@ describe('CarController (e2e)', () => {
   });
 
   it('/car/create (POST)', async () => {
-    console.log('Authorization Token:', authToken); // Ajoutez du logging pour vérifier le token
-
     const response = await request(app.getHttpServer())
       .post('/car/create')
       .set('Authorization', `Bearer ${authToken}`) // Ensure the token is prefixed with "Bearer "
-      .send({ brand: 'Toyota', model: 'Corolla', color: 'blue' });
-
-    // Vérifiez le code de réponse et les messages de retour
-    console.log('Response Status:', response.status);
-    console.log('Response Body:', response.body);
+      .send({
+        image:
+          'https://blog.vodiff.fr/wp-content/uploads/2022/09/BMW_M38_G80_VODIFF_1.jpg',
+        brand: 'Toyota',
+        model: 'Corolla',
+        color: 'blue',
+      });
 
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty('id');
@@ -122,7 +122,13 @@ describe('CarController (e2e)', () => {
     const response = await request(app.getHttpServer())
       .put('/car/update/' + carId)
       .set('Authorization', `Bearer ${authToken}`)
-      .send({ make: 'Toyota', model: 'Corolla', year: 2022 });
+      .send({
+        image:
+          'https://blog.vodiff.fr/wp-content/uploads/2022/09/BMW_M38_G80_VODIFF_1.jpg',
+        brand: 'Toyota',
+        model: 'Corolla',
+        year: 2022,
+      });
 
     expect(response.status).toBe(200);
     expect(response.ok).toEqual(true);
@@ -131,6 +137,85 @@ describe('CarController (e2e)', () => {
   it('/car/delete/:id (DELETE)', async () => {
     const response = await request(app.getHttpServer())
       .delete('/car/delete/' + carId)
+      .set('Authorization', `Bearer ${authToken}`);
+
+    expect(response.status).toBe(200);
+    expect(response.ok).toEqual(true);
+  });
+});
+
+describe('RaceController (e2e)', () => {
+  let app: INestApplication;
+  let authToken: string;
+  let raceId: number;
+
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    await app.init();
+
+    // Authenticate to get token
+    const loginResponse = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({ email: 'test@example.com', hash: 'Password123!' });
+
+    authToken = loginResponse.body.access_token;
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  it('/race/create (POST)', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/race/create')
+      .set('Authorization', `Bearer ${authToken}`) // Ensure the token is prefixed with "Bearer "
+      .send({ name: 'Race test', date: '2026-01-01', location: 'France' });
+
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty('id');
+
+    raceId = response.body.id;
+  });
+
+  it('/race (GET)', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/race')
+      .set('Authorization', `Bearer ${authToken}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toBeInstanceOf(Array);
+  });
+
+  it('/race/:id (GET)', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/race/' + raceId)
+      .set('Authorization', `Bearer ${authToken}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('id');
+  });
+
+  it('/race/update/:id (PUT)', async () => {
+    const response = await request(app.getHttpServer())
+      .put('/race/update/' + raceId)
+      .set('Authorization', `Bearer ${authToken}`)
+      .send({
+        name: 'Race tests modif',
+        date: '2026-02-02',
+        location: 'Espagne',
+      });
+
+    expect(response.status).toBe(200);
+    expect(response.ok).toEqual(true);
+  });
+
+  it('/race/delete/:id (DELETE)', async () => {
+    const response = await request(app.getHttpServer())
+      .delete('/race/delete/' + raceId)
       .set('Authorization', `Bearer ${authToken}`);
 
     expect(response.status).toBe(200);

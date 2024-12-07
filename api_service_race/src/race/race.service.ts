@@ -1,10 +1,15 @@
 import { PrismaService } from '../prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
+// import { Inject, Injectable } from '@nestjs/common';
 import { RaceDto } from '../dto/race.dto';
+// import { Race } from '@prisma/client';
+// import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class RaceService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService, // @Inject('CAR_SERVICE') private readonly client: ClientProxy,
+  ) {}
 
   async getAllRaces() {
     const races = await this.prisma.race.findMany();
@@ -47,4 +52,20 @@ export class RaceService {
     });
     return race;
   }
+
+  // async addParticipant(raceId: number, carId: number): Promise<Race> {
+  //   const carExists = await this.client.send({ cmd: 'CHECK_CAR' }, { carId });
+  //
+  //   if (!carExists) {
+  //     throw new Error('La voiture n’existe pas.');
+  //   }
+  //
+  //   const race = await this.prisma.race.update({
+  //     where: { id: raceId },
+  //     data: {
+  //       participants: { push: carId },
+  //     },
+  //   });
+  //   return race;
+  // }
 }

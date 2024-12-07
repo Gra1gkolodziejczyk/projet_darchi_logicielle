@@ -55,4 +55,5 @@ export declare class CarService {
         updatedAt: Date;
         id: number;
     }[]>;
+    checkCar(carId: number): Promise<boolean>;
 }
