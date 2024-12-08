@@ -1,10 +1,11 @@
-import {Body, Controller, Get, Param, Post} from '@nestjs/common';
+import {Body, Controller, Get, Post, Req, UseGuards} from '@nestjs/common';
 import {
   ClientProxy,
   ClientProxyFactory,
   Transport,
 } from '@nestjs/microservices';
 import { LoginDto, RegisterDto } from './dto';
+import { AuthGuard } from '../guard/auth-guard';
 
 @Controller('auth')
 export class AuthController {
@@ -38,5 +39,11 @@ export class AuthController {
   @Post('refreshToken')
   async refreshToken(@Body() refreshToken: string) {
     return this.client.send('REFRESHED_TOKEN', refreshToken);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('me')
+  async getMe(@Req() req) {
+    return req.user.id;
   }
 }
