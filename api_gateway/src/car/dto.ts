@@ -15,4 +15,8 @@ export class CarDto {
   @IsNotEmpty()
   @IsString()
   color: string;
+
+  @IsNotEmpty()
+  @IsString()
+  image: string;
 }
