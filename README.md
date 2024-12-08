@@ -123,3 +123,7 @@ Une fois connecté encore une fois on peut créer une course avec son nom, sa da
 ## Inscription a une course
 
 On peut inscrire un véhicule a une course avec son identifiant et la course ne peut se lancer que si il y a 2 véhicule dans celle-ci.
+
+
+
+## Impossible a run si nous n'avez pas les .env :) à demander à moi :)
