@@ -18,7 +18,7 @@ import {
 } from '@nestjs/microservices';
 import { AuthGuard } from '../guard/auth-guard';
 import { RaceDto } from './dto';
-import { firstValueFrom } from 'rxjs';
+import { catchError, firstValueFrom, of } from 'rxjs';
 
 @Controller('race')
 export class RaceController {
@@ -98,6 +98,20 @@ export class RaceController {
       throw new BadRequestException("La voiture n'existe pas.");
     }
 
-    return this.client.send('ADD_PARTICIPANT', { raceId, carId });
+    return this.client.send('ADD_PARTICIPANT', { raceId, carId })
+      .pipe(
+        catchError(val => of({ error: val.error }))
+      );
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/:raceId/start')
+  async startRace(
+    @Param('raceId') raceId: number
+  ) {
+    return this.client.send('START_RACE', raceId)
+      .pipe(
+        catchError(val => of({ error: val.message }))
+      );
   }
 }

@@ -40,4 +40,9 @@ export class RaceController {
   async addParticipant({ raceId, carId }: { raceId: string, carId: string }) {
     return this.raceService.addParticipant(parseInt(raceId), parseInt(carId));
   }
+
+  @MessagePattern("START_RACE")
+  async startRace(raceId: string) {
+    return this.raceService.startRace(parseInt(raceId))
+  }
 }
