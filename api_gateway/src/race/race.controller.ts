@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -17,10 +18,12 @@ import {
 } from '@nestjs/microservices';
 import { AuthGuard } from '../guard/auth-guard';
 import { RaceDto } from './dto';
+import { firstValueFrom } from 'rxjs';
 
 @Controller('race')
 export class RaceController {
   private client: ClientProxy;
+  private clientCar: ClientProxy;
 
   constructor() {
     this.client = ClientProxyFactory.create({
@@ -28,6 +31,13 @@ export class RaceController {
       options: {
         host: 'localhost',
         port: 9004,
+      },
+    });
+    this.clientCar = ClientProxyFactory.create({
+      transport: Transport.TCP,
+      options: {
+        host: 'localhost',
+        port: 9003,
       },
     });
   }
@@ -80,6 +90,12 @@ export class RaceController {
     const user = req.user;
     if (!user) {
       throw new ForbiddenException('Access denied');
+    }
+
+    const carExists = await firstValueFrom(this.clientCar.send<boolean>('CHECK_CAR', { carId }));
+    
+    if (!carExists) {
+      throw new BadRequestException("La voiture n'existe pas.");
     }
 
     return this.client.send('ADD_PARTICIPANT', { raceId, carId });

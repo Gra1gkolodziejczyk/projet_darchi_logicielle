@@ -36,9 +36,8 @@ export class RaceController {
     return this.raceService.deleteRace(parseInt(id));
   }
 
-  // @MessagePattern('ADD_PARTICIPANT')
-  // @Post('/:raceId/participants')
-  // async addParticipant(@Body() carId: string, raceId: string) {
-  //   return this.raceService.addParticipant(parseInt(raceId), parseInt(carId));
-  // }
+  @MessagePattern('ADD_PARTICIPANT')
+  async addParticipant({ raceId, carId }: { raceId: string, carId: string }) {
+    return this.raceService.addParticipant(parseInt(raceId), parseInt(carId));
+  }
 }
