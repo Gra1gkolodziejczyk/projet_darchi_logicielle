@@ -58,10 +58,15 @@ let CarService = class CarService {
         return cars;
     }
     async checkCar(carId) {
-        const car = await this.prisma.car.findUnique({
-            where: { id: carId },
-        });
-        return !!car;
+        try {
+            const car = await this.prisma.car.findUnique({
+                where: { id: carId },
+            });
+            return !!car;
+        }
+        catch {
+            return false;
+        }
     }
 };
 exports.CarService = CarService;

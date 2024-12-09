@@ -6,9 +6,7 @@ import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class RaceService {
-  constructor(
-    private prisma: PrismaService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async getAllRaces() {
     const races = await this.prisma.race.findMany();
@@ -58,30 +56,34 @@ export class RaceService {
         where: { id: raceId, winnerId: null },
         data: {
           participants: {
-            push: carId
+            push: carId,
           },
         },
       });
       return race;
     } catch {
-      throw new RpcException("La course est déjà fini ou la course n'existe pas.")
+      throw new RpcException(
+        "La course est déjà fini ou la course n'existe pas.",
+      );
     }
   }
 
   async startRace(raceId: number) {
-    const participants = (await this.prisma.race.findUnique({
-      where: { id: raceId }
-    })).participants;
+    const participants = (
+      await this.prisma.race.findUnique({
+        where: { id: raceId },
+      })
+    ).participants;
 
     if (participants.length < 2) {
-      throw new RpcException("La course ne contient pas assez de participant.")
+      throw new RpcException('La course ne contient pas assez de participant.');
     }
 
     return await this.prisma.race.update({
       where: { id: raceId },
       data: {
-        winnerId: participants[Math.floor(Math.random() * participants.length)]
-      }
-    })
+        winnerId: participants[Math.floor(Math.random() * participants.length)],
+      },
+    });
   }
 }

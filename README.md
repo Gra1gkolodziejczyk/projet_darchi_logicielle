@@ -9,6 +9,7 @@ Ce projet est une application web qui permet de gérer les données d'un archi-l
 Pour installer le projet, il faut d'abord cloner le dépôt git et ensuite exécuter les commandes suivantes :
 
 (faire cette commande sur le nombre de services disponibles)
+
 ```bash
 cd {{api-service-directory}}
 npm install
@@ -16,6 +17,7 @@ npm run start
 ```
 
 ## Diagramme C4
+
 ![img](assets/diagrammeC4_ctx.png)
 ![img](assets/diagrammeC4_container.png)
 ![img](assets/diagrammeC4.png)
@@ -35,7 +37,8 @@ http://localhost:9001/api
 
 ![img](assets/SwaggerApi.png)
 
-## tests : 
+## tests :
+
 rendez-vous sur l'api gateway pour lancer les tests
 
 ```bash
@@ -44,12 +47,12 @@ npm run test:e2e
 
 # Patterns utilisés
 
-
 ## All Paterns use
 
-quelques exemlpes de patterns utilisés dans le projet: 
+quelques exemlpes de patterns utilisés dans le projet:
 
 @Decorator
+
 ```
 @UseInterceptors(LoggingInterceptor)
 @Controller('users')
@@ -64,6 +67,7 @@ export class UserController {
 ```
 
 Pattern Observable
+
 ```
 canActivate(
     context: ExecutionContext,
@@ -87,11 +91,28 @@ canActivate(
       );
   }
 ```
+
 permets d'attendre une réponse qui vérifiera si le token est valide ou non.
+
+Builder:
+
+```
+  const config = new DocumentBuilder()
+    .setTitle('Api micro-service')
+    .setDescription('The micro-services API description')
+    .setVersion('1.0')
+    .addTag('all services')
+    .build();
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, documentFactory);
+
+  await app.listen(9001);
+```
+
+permet de build le swagger du projet
 
 On est pas sur de savoir lister tous les patterns utilisés dans le projet.
 Car Nestjs en utilise beaucoup.
-
 
 # Pourquoi utiliser Nestjs
 
@@ -107,9 +128,9 @@ et de façon tres simple.
 npm i --save @nestjs/microservices
 ```
 
-# Explications fonctionnelles 
+# Explications fonctionnelles
 
-## Création d'un utilisateur 
+## Création d'un utilisateur
 
 On peut créer un utilisateur avec un nom un prénom un email et un mot de passe et son age.
 
@@ -124,7 +145,5 @@ Une fois connecté encore une fois on peut créer une course avec son nom, sa da
 ## Inscription a une course
 
 On peut inscrire un véhicule a une course avec son identifiant et la course ne peut se lancer que si il y a 2 véhicule dans celle-ci.
-
-
 
 ## Impossible a run si nous n'avez pas les .env :) à demander à moi :)
