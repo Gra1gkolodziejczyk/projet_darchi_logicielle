@@ -16,7 +16,8 @@ npm run start
 ```
 
 ## Diagramme C4
-
+![img](assets/diagrammeC4_ctx.png)
+![img](assets/diagrammeC4_container.png)
 ![img](assets/diagrammeC4.png)
 
 ## Swagger API
