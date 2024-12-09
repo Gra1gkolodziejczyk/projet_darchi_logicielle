@@ -94,23 +94,6 @@ canActivate(
 
 permets d'attendre une réponse qui vérifiera si le token est valide ou non.
 
-Builder:
-
-```
-  const config = new DocumentBuilder()
-    .setTitle('Api micro-service')
-    .setDescription('The micro-services API description')
-    .setVersion('1.0')
-    .addTag('all services')
-    .build();
-  const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory);
-
-  await app.listen(9001);
-```
-
-permet de build le swagger du projet
-
 On est pas sur de savoir lister tous les patterns utilisés dans le projet.
 Car Nestjs en utilise beaucoup.
 
